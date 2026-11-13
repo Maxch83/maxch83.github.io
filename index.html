@@ -93,6 +93,19 @@ h2 em{color:var(--accent)}
 .sheet dt{font-family:var(--mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);padding-top:3px}
 .sheet dd{font-weight:500}
 
+/* Recherche */
+.roles{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+.role{display:grid;gap:10px;align-content:start;padding:22px;border:1px solid var(--line);border-radius:var(--r);background:var(--surface)}
+.role h3{font:400 26px/1.12 var(--display);text-wrap:balance}
+.role p{color:var(--muted);font-size:15px}
+.role ul{display:grid;gap:8px;font-size:15px}
+.role li{position:relative;padding-left:20px}
+.role li::before{content:"";position:absolute;left:0;top:.72em;width:9px;height:1.5px;background:var(--accent)}
+.terms{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:0;margin-top:22px;border-top:1px solid var(--line)}
+.terms div{padding:16px 16px 0 0;display:grid;gap:4px}
+.terms dt{font-family:var(--mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.terms dd{font-weight:500}
+
 /* Parcours */
 .timeline{display:grid;gap:0;border-top:1px solid var(--line)}
 .step{display:grid;grid-template-columns:180px minmax(0,1fr);gap:clamp(16px,4vw,48px);padding:28px 0;border-bottom:1px solid var(--line)}
@@ -186,6 +199,7 @@ footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
   <div class="wrap">
     <a class="brand" href="#accueil" aria-label="Maxime Chapman, retour en haut"><i>M</i><span>Maxime Chapman</span></a>
     <nav class="main" aria-label="Sections">
+      <a href="#recherche">Recherche</a>
       <a href="#profil">Profil</a>
       <a href="#parcours">Parcours</a>
       <a href="#projets">Projets</a>
@@ -201,12 +215,12 @@ footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
   <div class="hero">
     <div class="wrap">
       <div>
-        <span class="status"><b></b>En recherche d'un poste en cybersécurité</span>
+        <span class="status"><b></b>Disponible dès maintenant · mission jusqu'en septembre 2027</span>
         <h1>Maxime Chapman, <em>sécuriser</em> ce qui ne doit pas tomber.</h1>
-        <p class="lede">Diplômé d'une <strong>Licence Pro CRISIS</strong> en cybersécurité, j'ai passé mon alternance à la <strong>Direction Générale de l'Armement</strong> à administrer et sécuriser des infrastructures critiques. Je m'entraîne côté offensif pour mieux défendre.</p>
+        <p class="lede">Diplômé d'une <strong>Licence Pro CRISIS</strong> en cybersécurité, j'ai passé mon alternance à la <strong>Direction Générale de l'Armement</strong> à administrer et sécuriser des infrastructures critiques. Je cherche une mission en <strong>administration systèmes et réseaux, support informatique ou SOC</strong>, en région Sud.</p>
         <div class="cta">
-          <a class="btn" href="#projets">Voir mes projets</a>
-          <a class="btn ghost" href="#contact">Me contacter</a>
+          <a class="btn" href="#recherche">Ce que je cherche</a>
+          <a class="btn ghost" href="#projets">Voir mes projets</a>
         </div>
       </div>
       <figure class="sonar">
@@ -227,7 +241,55 @@ footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
     </div>
   </div>
 
-  <section id="profil">
+  <section id="recherche">
+    <div class="wrap">
+      <div class="head">
+        <span class="mono">Ce que je cherche</span>
+        <h2>Une mission, <em>tout de suite</em>, jusqu'en septembre 2027.</h2>
+        <p>CDD, intérim ou mission. Trois types de postes sur lesquels je suis opérationnel rapidement.</p>
+      </div>
+      <div class="roles">
+        <article class="role">
+          <span class="tag">Poste 1</span>
+          <h3>Administrateur systèmes et réseaux</h3>
+          <p>C'est ce que j'ai fait à la DGA pendant mon alternance.</p>
+          <ul>
+            <li>Intégration et configuration de serveurs</li>
+            <li>Virtualisation : Proxmox VE, vCenter, haute disponibilité</li>
+            <li>Sauvegarde, gestion des accès, maintien en condition de sécurité</li>
+          </ul>
+        </article>
+        <article class="role">
+          <span class="tag">Poste 2</span>
+          <h3>Technicien support informatique</h3>
+          <p>Une base technique large, du BTS SIO à la cybersécurité.</p>
+          <ul>
+            <li>Diagnostic sur Windows et Linux</li>
+            <li>Gestion des comptes et des droits d'accès</li>
+            <li>Scripts PowerShell et Python pour automatiser, procédures documentées</li>
+          </ul>
+        </article>
+        <article class="role">
+          <span class="tag">Poste 3</span>
+          <h3>Analyste SOC junior</h3>
+          <p>La réponse à incident est au cœur de la Licence CRISIS.</p>
+          <ul>
+            <li>Analyse de logs sous SIEM, OpenSearch et Kibana</li>
+            <li>Détection : exfiltration DNS, injections SQL, attaques Active Directory</li>
+            <li>Je connais les techniques d'attaque pour les avoir pratiquées en lab</li>
+          </ul>
+        </article>
+      </div>
+      <dl class="terms">
+        <div><dt>Contrat</dt><dd>CDD, intérim ou mission</dd></div>
+        <div><dt>Période</dt><dd>Dès maintenant, jusqu'en septembre 2027</dd></div>
+        <div><dt>Zone</dt><dd>Région Sud : Var, Marseille, Aix-en-Provence, Nice</dd></div>
+        <div><dt>Atout</dt><dd>Expérience en environnement défense, habitué aux exigences de confidentialité</dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <section id="profil" style="padding-top:0">
     <div class="wrap">
       <div class="head">
         <span class="mono">Profil</span>
@@ -240,8 +302,9 @@ footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
           <p>En parallèle, je passe du temps sur Root-Me PRO : Active Directory, protocoles industriels, failles web, élévation de privilèges. Comprendre comment on attaque un système est la meilleure façon de savoir où le renforcer.</p>
         </div>
         <dl class="sheet">
-          <div><dt>Poste visé</dt><dd>Cybersécurité : administration sécurisée, SOC, test d'intrusion junior</dd></div>
-          <div><dt>Base</dt><dd>Le Pradet, Var (83)</dd></div>
+          <div><dt>Postes visés</dt><dd>Administration systèmes et réseaux, support informatique, SOC</dd></div>
+          <div><dt>Disponibilité</dt><dd>Immédiate, jusqu'en septembre 2027</dd></div>
+          <div><dt>Base</dt><dd>Le Pradet, Var. Mobile en région Sud</dd></div>
           <div><dt>Diplôme</dt><dd>Licence Pro CRISIS, 2026</dd></div>
           <div><dt>Secteur</dt><dd>Expérience en environnement défense</dd></div>
           <div><dt>Intérêts</dt><dd>Sécurité offensive, cloud, IA, RGPD, ISO 27001</dd></div>
@@ -355,8 +418,8 @@ footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
       <div class="box">
         <div class="head" style="margin:0">
           <span class="mono">Contact</span>
-          <h2>Un poste à pourvoir ? <em>Parlons-en.</em></h2>
-          <p>Je réponds vite. Un mail ou un message LinkedIn suffit.</p>
+          <h2>Une mission à pourvoir ? <em>Parlons-en.</em></h2>
+          <p>Disponible dès maintenant, en région Sud. Un mail ou un message LinkedIn suffit, je réponds vite.</p>
         </div>
         <div class="ways">
           <div class="way">
@@ -367,7 +430,7 @@ footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
             <div><small>LinkedIn</small><a href="https://www.linkedin.com/in/maxime-chapman" target="_blank" rel="noopener">linkedin.com/in/maxime-chapman</a></div>
           </div>
           <div class="way">
-            <div><small>Localisation</small><strong>Le Pradet, Var</strong></div>
+            <div><small>Localisation</small><strong>Le Pradet, Var · mobile en région Sud</strong></div>
           </div>
         </div>
       </div>
