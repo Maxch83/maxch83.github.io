@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Portfolio Maxime Chapman</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* Layout idea: carte marine de la rade de Toulon. Papier froid, encre marine, un seul signal vermillon,
+   un sonar en ouverture, puis des fiches lisibles en une colonne large avec repères en mono. */
+:root{
+  --bg:#F1F4F3; --surface:#FFFFFF; --ink:#0C1D2C; --muted:#52616D; --line:#D3DADC;
+  --accent:#C53A20; --sea:#1F5F7A;
+  --display:"Instrument Serif",Georgia,"Times New Roman",serif;
+  --body:"Manrope",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --wrap:1120px; --r:14px;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#07131E; --surface:#0D1D2B; --ink:#E7EDEF; --muted:#93A4B0; --line:#1D3142;
+    --accent:#FF7A59; --sea:#74BAD4; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#07131E; --surface:#0D1D2B; --ink:#E7EDEF; --muted:#93A4B0; --line:#1D3142;
+  --accent:#FF7A59; --sea:#74BAD4; color-scheme:dark;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:84px}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.65;-webkit-font-smoothing:antialiased}
+h1,h2,h3,p,ul,ol,dl,dd,figure{margin:0}
+ul,ol{padding:0;list-style:none}
+a{color:inherit}
+button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:6px}
+.wrap{width:100%;max-width:var(--wrap);margin-inline:auto;padding-inline:clamp(16px,4vw,40px)}
+.mono{font-family:var(--mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+
+/* Barre de progression + en-tête */
+#progress{position:fixed;inset:0 auto auto 0;height:2px;width:100%;background:var(--accent);transform-origin:0 50%;transform:scaleX(0);z-index:30}
+header.top{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--bg) 86%,transparent);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.top .wrap{display:flex;align-items:center;gap:20px;min-height:64px}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;font-weight:700;white-space:nowrap}
+.brand i{display:grid;place-items:center;width:34px;height:34px;border-radius:50%;border:1.5px solid var(--ink);font:italic 18px/1 var(--display)}
+nav.main{margin-left:auto;display:flex;gap:4px;overflow-x:auto;scrollbar-width:none}
+nav.main::-webkit-scrollbar{display:none}
+nav.main a{padding:8px 12px;border-radius:999px;text-decoration:none;font-size:14px;font-weight:500;color:var(--muted);white-space:nowrap;transition:color .15s,background .15s}
+nav.main a:hover{color:var(--ink)}
+nav.main a[aria-current="true"]{color:var(--ink);background:color-mix(in srgb,var(--ink) 8%,transparent)}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:11px 18px;border-radius:999px;border:1.5px solid var(--ink);background:var(--ink);color:var(--bg);font-weight:600;font-size:14.5px;text-decoration:none;white-space:nowrap;transition:transform .15s,background .15s,color .15s}
+.btn:hover{transform:translateY(-1px)}
+.btn.ghost{background:transparent;color:var(--ink)}
+.btn.ghost:hover{background:color-mix(in srgb,var(--ink) 7%,transparent)}
+.top .btn{padding:8px 14px;font-size:13.5px}
+
+/* Ouverture */
+.hero{padding-block:clamp(40px,7vw,88px) clamp(32px,5vw,56px)}
+.hero .wrap{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);gap:clamp(28px,5vw,64px);align-items:center}
+.status{display:inline-flex;align-items:center;gap:10px;padding:6px 14px 6px 10px;border:1px solid var(--line);border-radius:999px;background:var(--surface);font-size:13.5px;font-weight:500}
+.status b{width:8px;height:8px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 4px color-mix(in srgb,var(--accent) 22%,transparent)}
+h1{font:400 clamp(52px,9vw,112px)/.95 var(--display);letter-spacing:-.015em;margin-top:22px;text-wrap:balance}
+h1 em{color:var(--accent)}
+.lede{margin-top:22px;max-width:54ch;font-size:clamp(17px,1.6vw,19px);color:var(--muted)}
+.lede strong{color:var(--ink);font-weight:600}
+.cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:30px}
+.sonar{display:grid;gap:12px;justify-items:center}
+.sonar canvas{width:100%;max-width:420px;aspect-ratio:1;display:block}
+.sonar figcaption{text-align:center}
+
+.facts{border-block:1px solid var(--line)}
+.facts ul{display:grid;grid-template-columns:repeat(4,minmax(0,1fr))}
+.facts li{padding:22px 20px;border-left:1px solid var(--line)}
+.facts li:first-child{border-left:0;padding-left:0}
+.facts strong{display:block;font:400 clamp(30px,3.6vw,42px)/1.05 var(--display);font-variant-numeric:tabular-nums}
+.facts span{display:block;margin-top:6px;font-size:14px;color:var(--muted)}
+
+/* Sections */
+section{padding-block:clamp(56px,8vw,104px)}
+.head{display:grid;gap:10px;margin-bottom:clamp(28px,4vw,44px);max-width:720px}
+h2{font:400 clamp(36px,5vw,58px)/1.02 var(--display);letter-spacing:-.01em;text-wrap:balance}
+h2 em{color:var(--accent)}
+.head p{color:var(--muted);max-width:62ch}
+
+.about{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,.8fr);gap:clamp(28px,5vw,64px)}
+.about .text{display:grid;gap:16px;max-width:65ch;font-size:17px}
+.sheet{border:1px solid var(--line);border-radius:var(--r);background:var(--surface);padding:6px 22px}
+.sheet div{display:grid;grid-template-columns:110px 1fr;gap:14px;padding:14px 0;border-top:1px solid var(--line)}
+.sheet div:first-child{border-top:0}
+.sheet dt{font-family:var(--mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);padding-top:3px}
+.sheet dd{font-weight:500}
+
+/* Parcours */
+.timeline{display:grid;gap:0;border-top:1px solid var(--line)}
+.step{display:grid;grid-template-columns:180px minmax(0,1fr);gap:clamp(16px,4vw,48px);padding:28px 0;border-bottom:1px solid var(--line)}
+.step .when{font-family:var(--mono);font-size:13px;color:var(--muted);padding-top:6px}
+.step .when b{display:block;color:var(--sea);font-weight:500;margin-top:4px}
+.step h3{font:400 28px/1.15 var(--display)}
+.step .org{color:var(--muted);font-weight:500;margin-top:2px}
+.step ul{display:grid;gap:8px;margin-top:14px;max-width:68ch}
+.step li{position:relative;padding-left:20px}
+.step li::before{content:"";position:absolute;left:0;top:.72em;width:9px;height:1.5px;background:var(--accent)}
+
+/* Projets */
+.filters{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:22px}
+.filters button{padding:7px 14px;border-radius:999px;border:1px solid var(--line);background:transparent;font-size:14px;font-weight:500;color:var(--muted);transition:all .15s}
+.filters button:hover{color:var(--ink);border-color:var(--ink)}
+.filters button[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--bg)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
+.card{display:grid;grid-template-rows:auto auto 1fr auto;gap:10px;text-align:left;padding:22px;border:1px solid var(--line);border-radius:var(--r);background:var(--surface);transition:transform .18s,border-color .18s,box-shadow .18s}
+.card:hover{transform:translateY(-3px);border-color:var(--ink);box-shadow:0 14px 30px -18px color-mix(in srgb,var(--ink) 55%,transparent)}
+.card[hidden]{display:none}
+.card .row{display:flex;justify-content:space-between;gap:10px;align-items:center}
+.tag{font-family:var(--mono);font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--sea)}
+.card h3{font:400 26px/1.12 var(--display);text-wrap:balance}
+.card p{color:var(--muted);font-size:15px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chips span{padding:3px 9px;border-radius:6px;background:color-mix(in srgb,var(--ink) 6%,transparent);font-family:var(--mono);font-size:12px}
+.card .more{font-size:14px;font-weight:600;margin-top:6px}
+.card .more::after{content:" →";color:var(--accent)}
+
+dialog{width:min(680px,calc(100% - 32px));max-height:min(86vh,760px);padding:0;border:1px solid var(--line);border-radius:18px;background:var(--surface);color:var(--ink);overflow:auto}
+dialog::backdrop{background:rgba(4,12,20,.6);backdrop-filter:blur(3px)}
+.dlg{padding:clamp(22px,4vw,36px);display:grid;gap:18px}
+.dlg header{display:flex;justify-content:space-between;gap:16px;align-items:flex-start}
+.dlg h3{font:400 clamp(30px,5vw,40px)/1.05 var(--display);margin-top:6px;text-wrap:balance}
+.dlg h4{margin:0 0 6px;font-family:var(--mono);font-size:12px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.dlg ul{display:grid;gap:6px}
+.dlg li{position:relative;padding-left:20px}
+.dlg li::before{content:"";position:absolute;left:0;top:.72em;width:9px;height:1.5px;background:var(--accent)}
+.x{flex:none;width:38px;height:38px;border-radius:50%;border:1px solid var(--line);background:transparent;font-size:18px;line-height:1}
+.x:hover{border-color:var(--ink)}
+
+/* Compétences */
+.skills{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:0;border-top:1px solid var(--line);border-left:1px solid var(--line)}
+.skill{padding:24px;border-right:1px solid var(--line);border-bottom:1px solid var(--line);display:grid;gap:12px;align-content:start}
+.skill h3{font:400 25px/1.15 var(--display)}
+.skill p{font-size:14.5px;color:var(--muted)}
+
+/* Carnet de labo */
+.logwrap{overflow-x:auto;border:1px solid var(--line);border-radius:var(--r);background:var(--surface)}
+table{width:100%;min-width:680px;border-collapse:collapse;font-size:14.5px}
+th,td{text-align:left;padding:14px 18px;border-bottom:1px solid var(--line);vertical-align:top}
+tr:last-child td{border-bottom:0}
+th{font-family:var(--mono);font-size:12px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+td:first-child{font-weight:600;white-space:nowrap}
+td:last-child{font-family:var(--mono);font-size:13px;color:var(--muted)}
+
+/* Contact */
+.contact{border-top:1px solid var(--line)}
+.contact .box{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:clamp(24px,5vw,64px);align-items:end}
+.contact h2{font-size:clamp(44px,7vw,84px)}
+.ways{display:grid;gap:12px}
+.way{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;padding:16px 20px;border:1px solid var(--line);border-radius:var(--r);background:var(--surface)}
+.way small{display:block;font-family:var(--mono);font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.way a{font-weight:600;text-decoration-color:var(--accent);text-underline-offset:4px;overflow-wrap:anywhere}
+.way button{padding:7px 14px;border-radius:999px;border:1px solid var(--line);background:transparent;font-size:13.5px;font-weight:600}
+.way button:hover{border-color:var(--ink)}
+footer{padding-block:28px 40px;color:var(--muted);font-size:13.5px}
+footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+
+@media (max-width:860px){
+  .hero .wrap,.about,.contact .box{grid-template-columns:1fr}
+  .sonar canvas{max-width:320px}
+  .facts ul{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .facts li{border-left:0;padding-left:0;border-top:1px solid var(--line)}
+  .facts li:nth-child(-n+2){border-top:0}
+  .step{grid-template-columns:1fr;gap:8px}
+  .top .btn{display:none}
+  nav.main{margin-left:0}
+  .brand span{display:none}
+}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *{transition:none!important;animation:none!important}
+}
+</style>
+</head>
+<body>
+<div id="progress" aria-hidden="true"></div>
+
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="#accueil" aria-label="Maxime Chapman, retour en haut"><i>M</i><span>Maxime Chapman</span></a>
+    <nav class="main" aria-label="Sections">
+      <a href="#profil">Profil</a>
+      <a href="#parcours">Parcours</a>
+      <a href="#projets">Projets</a>
+      <a href="#competences">Compétences</a>
+      <a href="#labo">Labo</a>
+      <a href="#contact">Contact</a>
+    </nav>
+    <a class="btn" href="#contact">Me contacter</a>
+  </div>
+</header>
+
+<main id="accueil">
+  <div class="hero">
+    <div class="wrap">
+      <div>
+        <span class="status"><b></b>En recherche d'un poste en cybersécurité</span>
+        <h1>Maxime Chapman, <em>sécuriser</em> ce qui ne doit pas tomber.</h1>
+        <p class="lede">Diplômé d'une <strong>Licence Pro CRISIS</strong> en cybersécurité, j'ai passé mon alternance à la <strong>Direction Générale de l'Armement</strong> à administrer et sécuriser des infrastructures critiques. Je m'entraîne côté offensif pour mieux défendre.</p>
+        <div class="cta">
+          <a class="btn" href="#projets">Voir mes projets</a>
+          <a class="btn ghost" href="#contact">Me contacter</a>
+        </div>
+      </div>
+      <figure class="sonar">
+        <canvas id="sonar" role="img" aria-label="Sonar animé affichant mes domaines : Active Directory, virtualisation, bastions, SOC, systèmes industriels, web, Linux, gouvernance"></canvas>
+        <figcaption class="mono">43°06′ N · 6°01′ E · Le Pradet, rade de Toulon</figcaption>
+      </figure>
+    </div>
+  </div>
+
+  <div class="facts">
+    <div class="wrap">
+      <ul>
+        <li><strong>2025–26</strong><span>Alternance à la DGA, service S2NA</span></li>
+        <li><strong>3</strong><span>missions menées en alternance</span></li>
+        <li><strong>Bac+3</strong><span>Licence Pro CRISIS, CNAM</span></li>
+        <li><strong>6</strong><span>domaines travaillés en CTF</span></li>
+      </ul>
+    </div>
+  </div>
+
+  <section id="profil">
+    <div class="wrap">
+      <div class="head">
+        <span class="mono">Profil</span>
+        <h2>Un pied dans la défense, un œil sur <em>l'attaque</em>.</h2>
+      </div>
+      <div class="about">
+        <div class="text">
+          <p>J'ai commencé par le développement web en BTS SIO, puis j'ai bifurqué vers la cybersécurité avec la Licence Pro CRISIS : réponse à incident, systèmes d'information, industriels et urbains.</p>
+          <p>À la DGA, j'ai travaillé sur l'administration des accès et le maintien en condition de sécurité d'infrastructures sensibles. J'y ai appris la rigueur : documenter, tester le retour arrière, ne rien laisser au hasard.</p>
+          <p>En parallèle, je passe du temps sur Root-Me PRO : Active Directory, protocoles industriels, failles web, élévation de privilèges. Comprendre comment on attaque un système est la meilleure façon de savoir où le renforcer.</p>
+        </div>
+        <dl class="sheet">
+          <div><dt>Poste visé</dt><dd>Cybersécurité : administration sécurisée, SOC, test d'intrusion junior</dd></div>
+          <div><dt>Base</dt><dd>Le Pradet, Var (83)</dd></div>
+          <div><dt>Diplôme</dt><dd>Licence Pro CRISIS, 2026</dd></div>
+          <div><dt>Secteur</dt><dd>Expérience en environnement défense</dd></div>
+          <div><dt>Intérêts</dt><dd>Sécurité offensive, cloud, IA, RGPD, ISO 27001</dd></div>
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <section id="parcours" style="padding-top:0">
+    <div class="wrap">
+      <div class="head">
+        <span class="mono">Parcours</span>
+        <h2>Expérience et formation</h2>
+      </div>
+      <div class="timeline">
+        <article class="step">
+          <div class="when">Oct. 2025 – août 2026<b>Alternance</b></div>
+          <div>
+            <h3>Apprenti en cybersécurité</h3>
+            <p class="org">Direction Générale de l'Armement · service S2NA · Toulon</p>
+            <ul>
+              <li>Administration des accès et maintien en condition de sécurité d'infrastructures critiques.</li>
+              <li>Intégration et configuration de serveurs dans l'environnement existant : virtualisation, sauvegarde, protection des postes.</li>
+              <li>Déploiement d'un cluster Proxmox VE avec stockage ZFS, haute disponibilité et tests de bascule.</li>
+              <li>Étude comparative de bastions d'administration, appuyée par une maquette.</li>
+            </ul>
+          </div>
+        </article>
+        <article class="step">
+          <div class="when">2025 – 2026<b>Formation</b></div>
+          <div>
+            <h3>Licence Professionnelle CRISIS</h3>
+            <p class="org">CNAM Provence-Alpes-Côte d'Azur · UFA Costebelle</p>
+            <ul>
+              <li>Cybersécurité et réponse à incident pour les systèmes d'information, industriels et urbains.</li>
+              <li>Projet fil rouge : sécurisation d'un éclairage public connecté (NIS2, IEC 62443, RGPD).</li>
+              <li>Rapport d'alternance : « Administration et sécurité des systèmes numériques à la Direction Générale de l'Armement ».</li>
+            </ul>
+          </div>
+        </article>
+        <article class="step">
+          <div class="when">Avant 2025<b>Formation</b></div>
+          <div>
+            <h3>BTS SIO, option SLAM</h3>
+            <p class="org">Services informatiques aux organisations · solutions logicielles</p>
+            <ul>
+              <li>Développement web en PHP, JavaScript et Python.</li>
+              <li>Une base de développeur qui sert aujourd'hui à lire du code, écrire des scripts et comprendre les failles applicatives.</li>
+            </ul>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section id="projets" style="padding-top:0">
+    <div class="wrap">
+      <div class="head">
+        <span class="mono">Projets</span>
+        <h2>Ce que j'ai <em>construit</em>, étudié, cassé.</h2>
+        <p>Cliquez sur une fiche pour le détail : contexte, ce que j'ai fait, outils utilisés.</p>
+      </div>
+      <div class="filters" id="filters" role="group" aria-label="Filtrer les projets"></div>
+      <div class="grid" id="grid"></div>
+    </div>
+  </section>
+
+  <section id="competences" style="padding-top:0">
+    <div class="wrap">
+      <div class="head">
+        <span class="mono">Compétences</span>
+        <h2>La boîte à outils</h2>
+        <p>Uniquement ce que j'ai réellement pratiqué, en entreprise, en formation ou en lab.</p>
+      </div>
+      <div class="skills">
+        <div class="skill"><h3>Infrastructure et virtualisation</h3><p>Monter, faire tourner et sauvegarder un socle fiable.</p><div class="chips"><span>Proxmox VE</span><span>ZFS</span><span>Haute disponibilité</span><span>vCenter</span><span>Veeam</span><span>Linux</span><span>Windows Server</span></div></div>
+        <div class="skill"><h3>Accès et administration sécurisée</h3><p>Contrôler qui se connecte, à quoi, et en garder la trace.</p><div class="chips"><span>Bastions</span><span>WALLIX</span><span>PROVE IT</span><span>Teleport</span><span>Gestion des accès</span><span>MCS</span></div></div>
+        <div class="skill"><h3>Sécurité offensive</h3><p>Pratiquée en environnement d'entraînement, sur Root-Me PRO.</p><div class="chips"><span>Kerberoasting</span><span>AS-REP Roasting</span><span>BloodHound</span><span>Injection SQL</span><span>IDOR</span><span>Upload de fichiers</span><span>Privesc Linux</span><span>John the Ripper</span></div></div>
+        <div class="skill"><h3>Détection et analyse de logs</h3><p>Retrouver ce qui s'est passé à partir des traces.</p><div class="chips"><span>SIEM / ELK</span><span>OpenSearch</span><span>Kibana</span><span>Logs Apache</span><span>Exfiltration DNS</span><span>Forensic réseau</span></div></div>
+        <div class="skill"><h3>Systèmes industriels et normes</h3><p>La spécialité de la Licence CRISIS : l'IT rencontre l'OT.</p><div class="chips"><span>Modbus TCP</span><span>OPC UA</span><span>IEC 62443</span><span>NIS2</span><span>RGPD</span><span>SysML</span></div></div>
+        <div class="skill"><h3>Scripts et développement</h3><p>Automatiser, outiller un challenge, lire du code.</p><div class="chips"><span>Python</span><span>PowerShell</span><span>PHP</span><span>JavaScript</span><span>HTML / CSS</span><span>Git</span></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="labo" style="padding-top:0">
+    <div class="wrap">
+      <div class="head">
+        <span class="mono">Carnet de labo · Root-Me PRO</span>
+        <h2>Ce que je travaille en CTF</h2>
+        <p>Un entraînement régulier, catégorie par catégorie, avec mes propres scripts.</p>
+      </div>
+      <div class="logwrap">
+        <table>
+          <thead><tr><th>Catégorie</th><th>Techniques travaillées</th><th>Outils</th></tr></thead>
+          <tbody>
+            <tr><td>Active Directory</td><td>Cartographie des chemins d'attaque, Kerberoasting, AS-REP Roasting, analyse de rapports ADRecon</td><td>BloodHound · John the Ripper</td></tr>
+            <tr><td>SOC et logs</td><td>Détection d'exfiltration DNS, reconstitution d'injections SQL à partir de logs Apache</td><td>OpenSearch · Kibana · Python</td></tr>
+            <tr><td>Systèmes industriels</td><td>Lecture et écriture de registres, exploration de serveurs OPC UA</td><td>pymodbus · opcua</td></tr>
+            <tr><td>Web et API</td><td>Upload de webshell PHP, IDOR, mass assignment, erreurs de logique métier, dépôts Git exposés</td><td>git-dumper · curl</td></tr>
+            <tr><td>Linux</td><td>Élévation de privilèges : tâches cron, détournement de PATH, binaires GTFOBins, CVE-2025-32463</td><td>Bash</td></tr>
+            <tr><td>Cryptographie</td><td>Attaque par dictionnaire sur du chiffrement symétrique GPG</td><td>John the Ripper · hashcat</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact" class="contact">
+    <div class="wrap">
+      <div class="box">
+        <div class="head" style="margin:0">
+          <span class="mono">Contact</span>
+          <h2>Un poste à pourvoir ? <em>Parlons-en.</em></h2>
+          <p>Je réponds vite. Un mail ou un message LinkedIn suffit.</p>
+        </div>
+        <div class="ways">
+          <div class="way">
+            <div><small>E-mail</small><a href="mailto:maxime.chapman@gmail.com" id="mail">maxime.chapman@gmail.com</a></div>
+            <button type="button" id="copy">Copier</button>
+          </div>
+          <div class="way">
+            <div><small>LinkedIn</small><a href="https://www.linkedin.com/in/maxime-chapman" target="_blank" rel="noopener">linkedin.com/in/maxime-chapman</a></div>
+          </div>
+          <div class="way">
+            <div><small>Localisation</small><strong>Le Pradet, Var</strong></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>© 2026 Maxime Chapman</span>
+    <span class="mono">Cybersécurité · Toulon et alentours</span>
+  </div>
+</footer>
+
+<dialog id="dlg" aria-labelledby="dlg-title"><div class="dlg" id="dlg-body"></div></dialog>
+
+<script>
+(function(){
+  "use strict";
+  var $ = function(s){ return document.querySelector(s); };
+  var reduce = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* ---------- Projets ---------- */
+  var CATS = ["Tous","Infrastructure","Offensif","Gouvernance","Data","Développement"];
+  var PROJECTS = [
+    {t:"Cluster Proxmox VE haute disponibilité", c:"Infrastructure", w:"DGA · 2026",
+     s:"Déploiement d'un cluster de virtualisation avec stockage ZFS et bascule automatique.",
+     k:["Proxmox VE","ZFS","HA"],
+     ctx:"Mission d'alternance au service S2NA de la DGA : évaluer et mettre en place une plateforme de virtualisation résiliente.",
+     did:["Installation et configuration du cluster Proxmox VE","Mise en place du stockage ZFS","Configuration de la haute disponibilité","Tests de bascule et de retour (failover / failback), puis documentation"]},
+    {t:"Étude comparative de bastions d'administration", c:"Infrastructure", w:"DGA · 2026",
+     s:"Comparer des solutions de bastion et valider les principes sur une maquette.",
+     k:["WALLIX","PROVE IT","Teleport"],
+     ctx:"Un bastion centralise et trace les accès d'administration. L'étude devait éclairer un choix de solution adapté au contexte.",
+     did:["Grille de critères : sécurité, traçabilité, intégration, exploitation","Comparaison WALLIX et PROVE IT (Rubycat)","Maquette Teleport sur Ubuntu Server pour manipuler les concepts","Restitution écrite au tuteur entreprise"]},
+    {t:"Intégration de serveurs en environnement sensible", c:"Infrastructure", w:"DGA · 2025",
+     s:"Prise en main de l'existant et configuration de serveurs dans la chaîne d'exploitation.",
+     k:["vCenter","Veeam","ApexOne"],
+     ctx:"Première mission d'alternance : comprendre l'infrastructure en place et y intégrer proprement de nouveaux serveurs.",
+     did:["Configuration de serveurs et raccordement à la virtualisation","Intégration à la sauvegarde","Protection antivirale des machines","Respect des procédures et des contraintes de confidentialité"]},
+    {t:"Parcours Root-Me PRO", c:"Offensif", w:"En continu",
+     s:"Entraînement offensif : Active Directory, web, systèmes industriels, élévation de privilèges.",
+     k:["BloodHound","Python","John"],
+     ctx:"Pratique régulière sur la plateforme Root-Me PRO pour garder la main côté attaque et mieux comprendre la défense.",
+     did:["Active Directory : Kerberoasting, AS-REP Roasting, BloodHound","Web et API : upload de fichiers, IDOR, mass assignment","ICS : Modbus TCP et OPC UA avec des scripts Python","Linux : cron, PATH, GTFOBins","Analyse de logs SOC sous OpenSearch et Kibana"]},
+    {t:"Éclairage public connecté cybersécurisé", c:"Gouvernance", w:"Licence CRISIS · 2026",
+     s:"Projet fil rouge : concevoir la sécurité d'un système d'éclairage urbain intelligent.",
+     k:["SysML","NIS2","IEC 62443"],
+     ctx:"Projet tutoré de la Licence Pro CRISIS sur un cas de ville connectée, à la frontière entre IT et systèmes industriels.",
+     did:["Diagrammes de cas d'utilisation et d'exigences SysML","Exigences de sécurité alignées sur NIS2, IEC 62443 et le RGPD","Dossier d'exigences généré en PDF avec Python (ReportLab)","Livrables rédigés et soutenus"]},
+    {t:"Hackathon Mobility", c:"Data", w:"Epitech × Citiz × Microsoft · oct. 2026",
+     s:"Modèle prédictif et optimisation sous contrainte de budget pour un service de mobilité partagée.",
+     k:["Python","Modélisation","Optimisation"],
+     ctx:"Hackathon en équipe avec Citiz et Microsoft comme partenaires. Zone d'étude choisie : Montpellier.",
+     did:["Responsable du modèle prédictif","Estimation des coûts","Optimisation des choix sous budget","Préparation de la restitution orale"]},
+    {t:"Journal de cinéma", c:"Développement", w:"Projet personnel",
+     s:"Un site personnel pour archiver mes séances, mes notes et mes critiques, mois par mois.",
+     k:["HTML","CSS","JavaScript"],
+     ctx:"Projet personnel au design sombre, pensé pour être léger et sans serveur.",
+     did:["Site statique en HTML et CSS","Application compagnon de suivi des films vus en salle","Notes et critiques conservées dans le navigateur (localStorage)","Récapitulatifs mensuels"]}
+  ];
+
+  var grid = $("#grid"), filters = $("#filters"), dlg = $("#dlg"), body = $("#dlg-body");
+  function esc(s){ return String(s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];}); }
+  function chips(a){ return a.map(function(k){return "<span>"+esc(k)+"</span>";}).join(""); }
+
+  PROJECTS.forEach(function(p,i){
+    var b = document.createElement("button");
+    b.type = "button"; b.className = "card"; b.dataset.cat = p.c; b.dataset.i = i;
+    b.innerHTML = '<span class="row"><span class="tag">'+esc(p.c)+'</span><span class="mono" style="text-transform:none;letter-spacing:0">'+esc(p.w)+'</span></span>'+
+      "<h3>"+esc(p.t)+"</h3><p>"+esc(p.s)+'</p><span class="chips">'+chips(p.k)+'</span><span class="more">Voir le détail</span>';
+    grid.appendChild(b);
+  });
+  CATS.forEach(function(c,i){
+    var b = document.createElement("button");
+    b.type = "button"; b.textContent = c; b.setAttribute("aria-pressed", i===0 ? "true":"false");
+    filters.appendChild(b);
+  });
+  filters.addEventListener("click",function(e){
+    var b = e.target.closest("button"); if(!b) return;
+    Array.prototype.forEach.call(filters.children,function(x){ x.setAttribute("aria-pressed", x===b ? "true":"false"); });
+    Array.prototype.forEach.call(grid.children,function(card){
+      card.hidden = !(b.textContent==="Tous" || card.dataset.cat===b.textContent);
+    });
+  });
+  grid.addEventListener("click",function(e){
+    var card = e.target.closest(".card"); if(!card) return;
+    var p = PROJECTS[+card.dataset.i];
+    body.innerHTML = '<header><div><span class="tag">'+esc(p.c)+" · "+esc(p.w)+'</span><h3 id="dlg-title">'+esc(p.t)+'</h3></div>'+
+      '<button type="button" class="x" id="dlg-x" aria-label="Fermer">×</button></header>'+
+      "<div><h4>Contexte</h4><p>"+esc(p.ctx)+"</p></div>"+
+      "<div><h4>Ce que j'ai fait</h4><ul>"+p.did.map(function(d){return "<li>"+esc(d)+"</li>";}).join("")+"</ul></div>"+
+      '<div><h4>Outils</h4><div class="chips">'+chips(p.k)+"</div></div>";
+    if(dlg.showModal) dlg.showModal(); else dlg.setAttribute("open","");
+  });
+  dlg.addEventListener("click",function(e){
+    if(e.target===dlg || e.target.closest("#dlg-x")){ if(dlg.close) dlg.close(); else dlg.removeAttribute("open"); }
+  });
+
+  /* ---------- Navigation ---------- */
+  var links = Array.prototype.slice.call(document.querySelectorAll('nav.main a'));
+  document.addEventListener("click",function(e){
+    var a = e.target.closest('a[href^="#"]'); if(!a) return;
+    var el = document.getElementById(a.getAttribute("href").slice(1)); if(!el) return;
+    e.preventDefault();
+    el.scrollIntoView({behavior: reduce ? "auto":"smooth", block:"start"});
+  });
+  if("IntersectionObserver" in window){
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(en){
+        if(!en.isIntersecting) return;
+        links.forEach(function(l){ l.setAttribute("aria-current", l.getAttribute("href")==="#"+en.target.id ? "true":"false"); });
+      });
+    },{rootMargin:"-45% 0px -50% 0px"});
+    links.forEach(function(l){ var s = document.getElementById(l.getAttribute("href").slice(1)); if(s) io.observe(s); });
+  }
+  var bar = $("#progress");
+  function prog(){
+    var h = document.documentElement, max = h.scrollHeight - h.clientHeight;
+    bar.style.transform = "scaleX("+(max>0 ? Math.min(1,h.scrollTop/max) : 0)+")";
+  }
+  window.addEventListener("scroll",prog,{passive:true}); prog();
+
+  /* ---------- Copier l'e-mail ---------- */
+  var copy = $("#copy");
+  copy.addEventListener("click",function(){
+    var done = function(t){ copy.textContent = t; setTimeout(function(){ copy.textContent = "Copier"; },1800); };
+    try{
+      navigator.clipboard.writeText("maxime.chapman@gmail.com").then(function(){ done("Copié ✓"); },function(){ done("Sélectionnez l'adresse"); });
+    }catch(err){ done("Sélectionnez l'adresse"); }
+  });
+
+  /* ---------- Sonar ---------- */
+  var cv = $("#sonar"), ctx = cv.getContext && cv.getContext("2d");
+  if(!ctx) return;
+  var TAU = Math.PI*2;
+  var BLIPS = [
+    {l:"Active Directory",a:0.35,r:.62},{l:"Proxmox VE",a:1.15,r:.80},{l:"Bastions",a:1.95,r:.50},
+    {l:"SOC · logs",a:2.75,r:.76},{l:"OPC UA · Modbus",a:3.6,r:.56},{l:"Web · API",a:4.3,r:.82},
+    {l:"Privesc Linux",a:5.05,r:.48},{l:"NIS2 · IEC 62443",a:5.8,r:.80}
+  ];
+  var W = 0;
+  function fit(){
+    var w = cv.clientWidth || 320, d = Math.min(window.devicePixelRatio||1,2);
+    cv.width = cv.height = Math.round(w*d); ctx.setTransform(d,0,0,d,0,0); W = w;
+  }
+  function tok(n){ return getComputedStyle(document.documentElement).getPropertyValue(n).trim() || "#888"; }
+  function draw(t){
+    var ink = tok("--ink"), acc = tok("--accent"), line = tok("--line"), sea = tok("--sea");
+    var c = W/2, R = W/2 - 6, ang = reduce ? 1.0 : (t*0.0007) % TAU, i;
+    ctx.clearRect(0,0,W,W);
+    ctx.lineWidth = 1; ctx.strokeStyle = line; ctx.globalAlpha = 1;
+    for(i=1;i<=4;i++){ ctx.beginPath(); ctx.arc(c,c,R*i/4,0,TAU); ctx.stroke(); }
+    for(i=0;i<12;i++){
+      var a = i*TAU/12, r0 = i%3===0 ? 0 : R*.94;
+      ctx.beginPath(); ctx.moveTo(c+Math.cos(a)*r0,c+Math.sin(a)*r0); ctx.lineTo(c+Math.cos(a)*R,c+Math.sin(a)*R); ctx.stroke();
+    }
+    ctx.fillStyle = acc;
+    for(i=0;i<36;i++){
+      ctx.globalAlpha = (1-i/36)*.16;
+      ctx.beginPath(); ctx.moveTo(c,c); ctx.arc(c,c,R,ang-(i+1)*.03,ang-i*.03+.004); ctx.closePath(); ctx.fill();
+    }
+    ctx.globalAlpha = .9; ctx.strokeStyle = acc; ctx.lineWidth = 1.5;
+    ctx.beginPath(); ctx.moveTo(c,c); ctx.lineTo(c+Math.cos(ang)*R,c+Math.sin(ang)*R); ctx.stroke();
+    ctx.font = "500 "+(W<300?10:11.5)+"px 'JetBrains Mono',ui-monospace,monospace"; ctx.textBaseline = "middle";
+    BLIPS.forEach(function(b){
+      var d = ((ang-b.a)%TAU+TAU)%TAU, g = reduce ? 1 : Math.max(.3,1-d/4.2);
+      var x = c+Math.cos(b.a)*R*b.r, y = c+Math.sin(b.a)*R*b.r;
+      ctx.globalAlpha = g*.25; ctx.fillStyle = acc; ctx.beginPath(); ctx.arc(x,y,4+g*7,0,TAU); ctx.fill();
+      ctx.globalAlpha = g; ctx.beginPath(); ctx.arc(x,y,3.2,0,TAU); ctx.fill();
+      ctx.fillStyle = ink; ctx.globalAlpha = .35+g*.65;
+      var left = x > c; ctx.textAlign = left ? "right":"left";
+      ctx.fillText(b.l, x+(left?-10:10), y);
+    });
+    ctx.globalAlpha = 1; ctx.fillStyle = sea; ctx.beginPath(); ctx.arc(c,c,3,0,TAU); ctx.fill();
+  }
+  function loop(t){ draw(t); if(!reduce) requestAnimationFrame(loop); }
+  fit(); loop(0);
+  window.addEventListener("resize",function(){ fit(); if(reduce) draw(0); });
+  if(document.fonts && document.fonts.ready) document.fonts.ready.then(function(){ if(reduce) draw(0); });
+})();
+</script>
+</body>
+</html>
